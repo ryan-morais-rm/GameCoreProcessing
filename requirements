@@ -1,0 +1,27 @@
+1. Metadata Glossary:
+- Name, Developer, Producer, Genre, Operating System, Data Released.
+
+2. Pre-processing:
+-> Field "data released" will be converted from "November 21, 1928" to "11/21/1928"
+-> Field "operating system" will be tokenized. So "Microsoft windows" will be only 
+  "windows".
+-> Duplicated games are not considered. 
+-> Blank lines are not considered.  
+
+3. Functions:
+-> Quantity of games loaded.
+-> Operating system most used. 
+-> Games released from each year.
+-> Search game. 
+
+4. Data structures:
+-> List.
+-> Binary Tree. 
+-> Hash Table. 
+
+5. Menu design:
+=========== MENU =========== 
+(q) quantity of games
+(s) search game
+(l) list games
+(e) exit
