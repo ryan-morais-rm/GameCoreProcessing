@@ -1,5 +1,3 @@
-use std::fmt;
-
 #[derive(Debug, PartialEq)] 
 pub enum OptionMenu {
     Q, 
@@ -8,18 +6,7 @@ pub enum OptionMenu {
     E, 
 }
 
-impl fmt::Display for OptionMenu {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            OptionMenu::Q => write!(f, "Option: Quantity of games"),
-            OptionMenu::S => write!(f, "Option: Search for a game"),
-            OptionMenu::L => write!(f, "Option: List games"),
-            OptionMenu::E => write!(f, "Option: Exit"),
-        }
-    }
-}
-
-pub fn from_str_to_option_menu(s: &String) -> Result<OptionMenu, String> {
+pub fn from_str(s: &String) -> Result<OptionMenu, String> {
     match s.to_uppercase().trim() {
         "Q" => Ok(OptionMenu::Q),
         "S" => Ok(OptionMenu::S),
@@ -41,19 +28,19 @@ pub fn select_options(option: &OptionMenu) -> Result<bool, String> {
     match option {
         OptionMenu::Q => { 
             println!("Processing quantity...");
-            Ok(true)
+            Ok(false)
         }
         OptionMenu::S => {
             println!("Searching for games...");
-            Ok(true)
+            Ok(false)
         }
         OptionMenu::L => {
             println!("Listing games...");
-            Ok(true)
+            Ok(false)
         }
         OptionMenu::E => {
             println!("Leaving...");
-            Ok(false)
+            Ok(true)
         }
     }
 }
