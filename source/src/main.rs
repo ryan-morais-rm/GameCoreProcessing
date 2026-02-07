@@ -1,6 +1,6 @@
 use std::io;
 mod menu;
-use crate::menu::{from_str_to_option_menu, select_options, show_menu};
+use crate::menu::{from_str, select_options, show_menu};
 
 fn main() {
     loop {
@@ -13,24 +13,15 @@ fn main() {
             continue; 
         }
 
-        let conversion_result = from_str_to_option_menu(&option);
+        let Ok(menu_item) = from_str(&option) else {
+            println!("Option does not exist!");
+            continue; 
+        };
 
-        match conversion_result {
-            Ok(menu_item) => {
-                match select_options(&menu_item) {
-                    Ok(should_continue) => {
-                        if !should_continue {
-                            break; 
-                        }
-                    },
-                    Err(msg) => println!("Could not continue: {}", msg),
-                }
-            },
-            Err(msg) => {
-                println!("This option does not exist in menu: {}", msg);
-            }
+        match select_options(&menu_item) {
+            Ok(true) => break, 
+            Ok(false) => continue, 
+            Err(msg) => println!("Could not continue: {}", msg), 
         }
-    }
-    
-    println!("Program has ended!");
+    }    
 }
