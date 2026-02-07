@@ -1,5 +1,7 @@
 use std::io;
 mod menu;
+mod game;
+mod common_traits;
 use crate::menu::{from_str, select_options, show_menu};
 
 fn main() {
