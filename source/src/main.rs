@@ -1,29 +1,21 @@
-use std::io;
 mod menu;
 mod game;
 mod common_traits;
-use crate::menu::{from_str, select_options, show_menu};
+use crate::menu::{from_str, select_options, show_menu, input_option};
 
 fn main() {
     loop {
-        let mut option = String::new(); 
-
         show_menu();
 
-        if io::stdin().read_line(&mut option).is_err() {
-            println!("Could not read input");
-            continue; 
-        }
+        let option = input_option();
 
         let Ok(menu_item) = from_str(&option) else {
-            println!("Option does not exist!");
-            continue; 
+            println!("This option does not exist");
+            continue;
         };
 
-        match select_options(&menu_item) {
-            Ok(true) => break, 
-            Ok(false) => continue, 
-            Err(msg) => println!("Could not continue: {}", msg), 
+        if select_options(&menu_item) {
+            break;
         }
     }    
 }
