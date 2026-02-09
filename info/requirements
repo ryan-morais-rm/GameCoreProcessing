@@ -2,7 +2,7 @@
 - Name, Developer, Producer, Genre, Operating System, Data Released.
 
 2. Pre-processing:
--> Field "data released" will be converted from "November 21, 1928" to "11/21/1928"
+-> Field "data released" will be converted from "November 21, 1928" to "1928"
 -> Field "operating system" will be tokenized. So "Microsoft windows" will be only 
   "windows".
 -> Duplicated games are not considered. 
