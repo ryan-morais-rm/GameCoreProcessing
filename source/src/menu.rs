@@ -1,5 +1,13 @@
 use std::io;
 
+#[derive(Debug, PartialEq)] 
+pub enum OptionMenu {
+    Q, 
+    S, 
+    L, 
+    E, 
+}
+
 pub fn show_menu() {
     println!("=========== MENU ==========="); 
     println!("(q) quantity of games"); 
@@ -14,41 +22,36 @@ pub fn input_option() -> String {
     option
 }
 
-#[derive(Debug, PartialEq)] 
-pub enum OptionMenu {
-    Q, 
-    S, 
-    L, 
-    E, 
-}
-
-pub fn from_str(s: &String) -> Result<OptionMenu, ()> {
+pub fn from_str(s: &String) -> Result<OptionMenu, String> {
     match s.to_uppercase().trim() {
         "Q" => Ok(OptionMenu::Q),
         "S" => Ok(OptionMenu::S),
         "L" => Ok(OptionMenu::L),
         "E" => Ok(OptionMenu::E),
-        _ => Err(()),
+        _ => Err(format!("{}", s)),
     }
 }
 
-pub fn select_options(option: &OptionMenu) -> bool {
+pub fn select_options(option: &Result<OptionMenu, String>) -> Result<bool, String> {
     match option {
-        OptionMenu::Q => { 
+        Ok(OptionMenu::Q) => { 
             println!("Processing quantity...");
-            false
+            Ok(false)
         }
-        OptionMenu::S => {
+        Ok(OptionMenu::S) => {
             println!("Searching for games...");
-            false
+            Ok(false)
         }
-        OptionMenu::L => {
+        Ok(OptionMenu::L) => {
             println!("Listing games...");
-            false
+            Ok(false)
         }
-        OptionMenu::E => {
+        Ok(OptionMenu::E) => {
             println!("Leaving program...");
-            true
+            Ok(true)
+        }
+        Err(msg) => {
+            Err(format!("This option does not exist: {}", msg))
         }
     }
 }
