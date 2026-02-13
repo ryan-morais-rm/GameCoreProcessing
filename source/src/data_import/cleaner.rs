@@ -1,7 +1,7 @@
 use std::arch::x86_64::_MM_MANT_SIGN_ZERO;
 use std::fs;
 use std::path::{PathBuf};
-use super::helpers::extract_game_name;
+use super::helpers::{check_dataset, extract_game_name};
 
 pub struct Cleaner {
     pub input_path: PathBuf, 
@@ -26,7 +26,6 @@ impl Cleaner {
                 return Err(()); 
             }
         }
-
         match self.clean_blank() {
             Ok(msg) => println!("{}", msg),
             Err(_) => {
@@ -34,24 +33,31 @@ impl Cleaner {
                 return Err(()); 
             }
         }
-
         match self.clean_name() {
-            Ok(msg) => {
-                println!("{}", msg);
-                Ok(())
-            },
+            Ok(msg) => println!("{}", msg),
             Err(_) => {
                 println!("It could not clean name column from the .csv");
-                Err(())
+                return Err(());
             }
         }
+        match self.clean_date() {
+            Ok(msg) => {
+                println!("{}", msg);
+            },
+            Err(_) => {
+                println!("It could not clean date column from the .csv");
+                return Err(());
+            }
+        }
+        check_dataset(&self.content);
         // self.clean_name();   
         // self.clean_date();   
         // self.clean_system(); 
         // self.save_data();
+        Ok(())
     }
 
-    pub fn load_data(&mut self) -> Result<String, String> {
+    fn load_data(&mut self) -> Result<String, String> {
         if !self.input_path.exists() {
             return Err(format!("There is no file in this path!")); 
         }
@@ -99,13 +105,50 @@ impl Cleaner {
         todo!()
     }
 
-    fn clean_date(&self) -> Result<bool, String>{
-        // This function is the third!
-        // "November 28, 1928" will be only "1928"...
-        todo!()
+    fn clean_date(&mut self) -> Result<String, ()> {
+        let mut modifieds = 0;
+
+        for line in self.content.iter_mut() {
+            let mut comma_count = 0;
+            let mut start_index = 0;
+            let mut inside_quotes = false;
+
+            for (i, c) in line.chars().enumerate() {
+                if i == 0 { continue; }
+                if c == '"' { inside_quotes = !inside_quotes; }
+                if c == ',' && !inside_quotes {
+                    comma_count += 1;
+                    if comma_count == 5 {
+                        start_index = i + 1; 
+                        break;
+                    }
+                }
+            }
+
+            if comma_count != 5 { continue; }
+            let raw_date = &line[start_index..];
+            let clean_str = raw_date.trim().trim_matches('"');
+            
+            let year = if clean_str.len() >= 4 {
+                let last_4 = &clean_str[clean_str.len()-4..];
+                if last_4.chars().all(|c| c.is_numeric()) {
+                    last_4
+                } else {
+                    "0000" 
+                }
+            } else {
+                "0000"
+            };
+
+            let nova_linha = format!("{}{}", &line[..start_index], year);
+            *line = nova_linha;
+            modifieds += 1;
+        }
+
+        Ok(format!("Dates are cleaned. {} lines has been adjusted to format AAAA.", modifieds))
     }
-    
-    pub fn clean_blank(&mut self) -> Result<String, bool> {
+
+    fn clean_blank(&mut self) -> Result<String, bool> {
         let len_before = self.content.len();
 
         self.content.retain(|line| {
