@@ -15,9 +15,7 @@
 -> Search game. 
 
 4. Data structures:
--> List.
--> Binary Tree. 
--> Hash Table. 
+-> Vector (native from Rust)
 
 5. Menu design:
 =========== MENU =========== 
