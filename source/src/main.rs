@@ -3,7 +3,7 @@ mod game;
 mod common_traits;
 mod data_import;
 use crate::data_import::cleaner::Cleaner;
-use crate::menu::{from_str, input_option, select_options, show_menu};
+// use crate::menu::{from_str, input_option, select_options, show_menu};
 
 fn main() {
     // Process of data cleaning and import of data from "computer_games.csv" to main.rs
@@ -11,6 +11,7 @@ fn main() {
     // import_data();
 
     // Main program
+    /* 
     loop {
         show_menu();
 
@@ -23,7 +24,8 @@ fn main() {
             Ok(false) => continue, 
             Err(msg) => println!("{}", msg),
         }
-    }    
+    }  
+    */  
 }
 
 
