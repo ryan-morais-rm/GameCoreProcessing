@@ -1,3 +1,4 @@
+/* 
 use std::collections::HashMap;
 use crate::game::Game;
 
@@ -11,11 +12,11 @@ pub struct Manipulator {
 }
 
 pub impl Manipulator {
-    fn new() -> Self {
+    fn new(&self) -> Self {
         Self {
             total_games: 0, 
             total_systems: 0, 
-            games_year: Vec::new(),
+            games_year: HashMap<u16, u32>,
             games: Vec::new(), 
         }
     }
@@ -40,3 +41,4 @@ pub impl Manipulator {
         todo!(); 
     }
 }
+*/
