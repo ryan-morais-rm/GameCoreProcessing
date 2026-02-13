@@ -1,2 +1,2 @@
-pub mod data_manipulator;
-mod data_cleaner; 
+// pub mod manipulator;
+pub mod cleaner; 
