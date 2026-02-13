@@ -28,14 +28,15 @@ fn main() {
 
 
 fn clean_data() {
+    println!("Data cleaning...");
     let mut data_cleaner = Cleaner::new(
         "../info/computer_games.csv",  
         "../info/games_cleaned.csv"   
     );
 
     match data_cleaner.run_cleaning_process() {
-        Ok(_) => println!("Everything went well!"),
-        Err(_) => println!("Ops!,something bad has ocurred..."),
+        Ok(_) => println!("Process has ended with ok state!"),
+        Err(_) => println!("Data could not be cleaned!"),
     }
 }
 

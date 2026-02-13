@@ -41,14 +41,14 @@ impl Cleaner {
         // self.save_data();
     }
     pub fn load_data(&mut self) -> Result<String, String> {
-        let path = Path::new("../info/computer_games.csv");
-        if !path.exists() {
+        if !self.input_path.exists() {
             return Err(format!("There is no file in this path!")); 
         }
-        if path.is_dir() {
+        if self.input_path.is_dir() {
             return Err(format!("It is a directory! not a File!"));
         }
-        let raw_text = fs::read_to_string(path).map_err(|e| e.to_string())?;
+        let raw_text = fs::read_to_string(&self.input_path)
+        .map_err(|e| e.to_string())?;
         
         self.content = raw_text.lines().map(|s| s.to_string()).collect();
         
@@ -119,6 +119,7 @@ impl Cleaner {
 
         let len_then = self.content.len();
 
-        Ok(format!("Limpeza concluída: {} linhas removidas. Restaram: {}", len_before - len_then, len_then))
+        Ok(format!("Cleaning of blank lines has ended!: {} removed lines. Rest: {}", 
+        len_before - len_then, len_then))
     }
 }
