@@ -12,7 +12,8 @@ pub struct Game {
 
 impl fmt::Display for Game {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Name: {}, Genre: {}, System: {}, Date: {}", self.name, self.genre, self.system, self.date)
+        write!(f, "Name: {}, Developer: {}, Producer: {}, Genre: {}, System: {}, Date: {}", 
+        self.name, self.developer, self.producer, self.genre, self.system, self.date)
     }
 }
 
@@ -26,11 +27,18 @@ impl Metadata for Game {
 }
 
 impl Game {
-    pub fn new(name: String, developer: String, producer:String, genre: String, system: String, date: String,) -> Self {
+    pub fn new(name: String, developer: String, producer:String, 
+        genre: String, system: String, date: String,) -> Self {
         Self { name, developer, producer, genre, system, date }
     }
     pub fn name(&self) -> &str {
         &self.name
+    }
+    pub fn producer(&self) -> &str {
+        &self.producer
+    }
+    pub fn developer(&self) -> &str {
+        &self.developer
     }
     pub fn genre(&self) -> &str {
         &self.genre 
