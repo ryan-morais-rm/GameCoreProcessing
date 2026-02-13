@@ -1,5 +1,7 @@
+use std::arch::x86_64::_MM_MANT_SIGN_ZERO;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::{PathBuf};
+use super::helpers::extract_game_name;
 
 pub struct Cleaner {
     pub input_path: PathBuf, 
@@ -26,13 +28,21 @@ impl Cleaner {
         }
 
         match self.clean_blank() {
+            Ok(msg) => println!("{}", msg),
+            Err(_) => {
+                println!("It could not clean blanks from the .csv");
+                return Err(()); 
+            }
+        }
+
+        match self.clean_name() {
             Ok(msg) => {
                 println!("{}", msg);
                 Ok(())
             },
             Err(_) => {
-                println!("It could not clean blanks from the .csv");
-                return Err(()); 
+                println!("It could not clean name column from the .csv");
+                Err(())
             }
         }
         // self.clean_name();   
@@ -40,6 +50,7 @@ impl Cleaner {
         // self.clean_system(); 
         // self.save_data();
     }
+
     pub fn load_data(&mut self) -> Result<String, String> {
         if !self.input_path.exists() {
             return Err(format!("There is no file in this path!")); 
@@ -54,16 +65,31 @@ impl Cleaner {
         
         Ok(format!("File stored and prepared to be used!"))
     }
+
     fn save_data(&self) -> Result<bool, String> {
         // Save the changes on another clean computer_games_clean.csv
         todo!()
     }
+
     // Secondary functions
-    fn clean_name(&self) -> Result<bool, String> {
-        // This function is the second!
-        // Iterate on which games names and remove duplicate games...
-        todo!()
+    fn clean_name(&mut self) -> Result<String, ()> {
+        let len_before = self.content.len();
+
+        self.content.dedup_by(|a, b| {
+            let name_a = extract_game_name(a);
+            let name_b = extract_game_name(b);
+
+            name_a.eq_ignore_ascii_case(&name_b)
+        });
+
+        let len_after = self.content.len();
+        
+        Ok(format!(
+            "Duplicated games: {} deleted games.", 
+            len_before - len_after
+        ))
     }
+
     fn clean_system(&self) -> Result<bool, String> {
         // This function is the fourth!
         // Token. So, "Microsoft Windows" will be only "Windows"...
@@ -72,11 +98,13 @@ impl Cleaner {
         // Macintosh stays same
         todo!()
     }
+
     fn clean_date(&self) -> Result<bool, String>{
         // This function is the third!
         // "November 28, 1928" will be only "1928"...
         todo!()
     }
+    
     pub fn clean_blank(&mut self) -> Result<String, bool> {
         let len_before = self.content.len();
 
