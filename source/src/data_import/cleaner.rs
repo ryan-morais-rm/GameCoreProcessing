@@ -1,7 +1,6 @@
-use std::arch::x86_64::_MM_MANT_SIGN_ZERO;
 use std::fs;
 use std::path::{PathBuf};
-use super::helpers::{check_dataset, extract_game_name};
+use super::cleaner_helpers::{check_dataset, extract_game_name, validate_system, field_clean_blank};
 
 pub struct Cleaner {
     pub input_path: PathBuf, 
@@ -41,17 +40,20 @@ impl Cleaner {
             }
         }
         match self.clean_date() {
-            Ok(msg) => {
-                println!("{}", msg);
-            },
+            Ok(msg) => println!("{}", msg),
             Err(_) => {
                 println!("It could not clean date column from the .csv");
                 return Err(());
             }
         }
-        check_dataset(&self.content);
-        // self.clean_name();   
-        // self.clean_date();   
+        match self.clean_system() {
+            Ok(msg) => println!("{}", msg),
+            Err(_) => {
+                println!("It could not clean system column from the .csv");
+                return Err(());
+            }
+        }
+        check_dataset(&self.content);  
         // self.clean_system(); 
         // self.save_data();
         Ok(())
@@ -96,13 +98,45 @@ impl Cleaner {
         ))
     }
 
-    fn clean_system(&self) -> Result<bool, String> {
-        // This function is the fourth!
-        // Token. So, "Microsoft Windows" will be only "Windows"...
-        // MacOS or macOS will be macOS
-        // Linux stays same
-        // Macintosh stays same
-        todo!()
+    pub fn clean_system(&mut self) -> Result<String, ()> {
+        let mut modificados = 0;
+        for line in self.content.iter_mut() {
+            let mut fields = Vec::new();
+            let mut current_field = String::new();
+            let mut inside_quotes = false;
+
+            for c in line.chars() {
+                match c {
+                    '"' => inside_quotes = !inside_quotes, 
+                    ',' if !inside_quotes => {
+                        fields.push(current_field.trim().to_string());
+                        current_field.clear();
+                    }
+                    _ => current_field.push(c),
+                }
+            }
+            fields.push(current_field.trim().to_string()); 
+
+            if fields.len() != 6 { continue; }
+            let raw_os = &fields[4];
+            let cleaned_systems = validate_system(raw_os);
+            let new_os_field = cleaned_systems.join(", ");
+            fields[4] = new_os_field;
+
+            let new_line: Vec<String> = fields.iter()
+                .map(|f| {
+                    if f.contains(',') {
+                        format!("\"{}\"", f)
+                    } else {
+                        f.to_string()
+                    }
+                })
+                .collect();
+            *line = new_line.join(",");
+            modificados += 1;
+        }
+
+        Ok(format!("Sistemas padronizados. {} linhas processadas.", modificados))
     }
 
     fn clean_date(&mut self) -> Result<String, ()> {
@@ -145,7 +179,8 @@ impl Cleaner {
             modifieds += 1;
         }
 
-        Ok(format!("Dates are cleaned. {} lines has been adjusted to format AAAA.", modifieds))
+        Ok(format!("Dates are cleaned. {} lines has been adjusted 
+        to format AAAA.", modifieds))
     }
 
     fn clean_blank(&mut self) -> Result<String, bool> {
@@ -153,28 +188,11 @@ impl Cleaner {
 
         self.content.retain(|line| {
             if line.trim().is_empty() { return false; }
-
-            let mut fields = Vec::new();
-            let mut current_field = String::new();
-            let mut inside_quotes = false;
-
-            for c in line.chars() {
-                match c {
-                    '"' => inside_quotes = !inside_quotes, 
-                    
-                    ',' if !inside_quotes => {
-                        fields.push(current_field.trim().to_string());
-                        current_field.clear();
-                    }
-                    
-                    _ => current_field.push(c),
-                }
-            }
-
-            fields.push(current_field.trim().to_string());
+            
+            let fields = field_clean_blank(line);
 
             if fields.len() != 6 {
-                println!("Removido (Colunas erradas: {}): {}", fields.len(), line);
+                println!("Removed (Wrong columns: {}): {}", fields.len(), line);
                 return false; 
             }
 
