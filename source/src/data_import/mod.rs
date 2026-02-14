@@ -1,3 +1,3 @@
 // pub mod manipulator;
 pub mod cleaner; 
-pub mod helpers;
+pub mod cleaner_helpers;
