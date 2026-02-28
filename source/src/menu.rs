@@ -1,4 +1,5 @@
 use std::io;
+use super::common_traits::data::{sleep};
 
 #[derive(Debug, PartialEq)] 
 pub enum OptionMenu {
@@ -36,18 +37,22 @@ pub fn select_options(option: &Result<OptionMenu, String>) -> Result<bool, Strin
     match option {
         Ok(OptionMenu::Q) => { 
             println!("Processing quantity...");
+            sleep();
             Ok(false)
         }
         Ok(OptionMenu::S) => {
             println!("Searching for games...");
+            sleep();
             Ok(false)
         }
         Ok(OptionMenu::L) => {
             println!("Listing games...");
+            sleep();
             Ok(false)
         }
         Ok(OptionMenu::E) => {
             println!("Leaving program...");
+            sleep();
             Ok(true)
         }
         Err(msg) => {

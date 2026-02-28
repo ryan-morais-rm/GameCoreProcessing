@@ -12,17 +12,26 @@ pub struct Game {
 
 impl fmt::Display for Game {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Name: {}, Developer: {}, Producer: {}, Genre: {}, System: {}, Date: {}", 
+        write!(f, "Name: {}, 
+                   Developer: {}, 
+                   Producer: {}, 
+                   Genre: {}, 
+                   System: {}, 
+                   Date: {}", 
         self.name, self.developer, self.producer, self.genre, self.system, self.date)
     }
 }
 
 impl Metadata for Game {
     fn common(&self) -> String {
-        format!("name: {}, date: {}", self.name, self.date)
+        format!("name: {}, 
+                 date: {}", 
+        self.name, self.date)
     }
     fn specific(&self) -> String {
-        format!("producer: {}, developer: {}", self.producer, self.developer)
+        format!("producer: {}, 
+                 developer: {}", 
+        self.producer, self.developer)
     }
 }
 
