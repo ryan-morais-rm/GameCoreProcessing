@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 // Cleaner game functions
 pub fn extract_game_name(line: &str) -> String {
     let mut name = String::new();
@@ -82,4 +84,8 @@ pub fn check_dataset(content: &Vec<String>) {
         }
     }
     println!("=========================================\n");
+}
+
+pub fn show_path(path: &PathBuf) -> String {
+    format!("{:?}", path.as_path())
 }

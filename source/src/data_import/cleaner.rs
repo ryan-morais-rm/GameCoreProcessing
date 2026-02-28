@@ -1,6 +1,10 @@
 use std::fs;
 use std::path::{PathBuf};
-use super::cleaner_helpers::{check_dataset, extract_game_name, validate_system, field_clean_blank};
+use crate::common_traits::data::{sleep};
+
+use super::cleaner_helpers::{check_dataset, extract_game_name, 
+                             validate_system, field_clean_blank,
+                             show_path};
 
 pub struct Cleaner {
     pub input_path: PathBuf, 
@@ -18,13 +22,15 @@ impl Cleaner {
     }
     // Main functions that invokes secondary functions... 
     pub fn run_cleaning_process(&mut self) -> Result<(), ()> {
-        match self.load_data() {
+        sleep();
+        match self.load_file() {
             Ok(msg) => println!("{}", msg),
             Err(e) => {
                 println!("{}", e);
                 return Err(()); 
             }
         }
+        sleep();
         match self.clean_blank() {
             Ok(msg) => println!("{}", msg),
             Err(_) => {
@@ -32,6 +38,7 @@ impl Cleaner {
                 return Err(()); 
             }
         }
+        sleep();
         match self.clean_name() {
             Ok(msg) => println!("{}", msg),
             Err(_) => {
@@ -39,6 +46,7 @@ impl Cleaner {
                 return Err(());
             }
         }
+        sleep();
         match self.clean_date() {
             Ok(msg) => println!("{}", msg),
             Err(_) => {
@@ -46,6 +54,7 @@ impl Cleaner {
                 return Err(());
             }
         }
+        sleep();
         match self.clean_system() {
             Ok(msg) => println!("{}", msg),
             Err(_) => {
@@ -53,13 +62,22 @@ impl Cleaner {
                 return Err(());
             }
         }
+        sleep();
         check_dataset(&self.content);  
-        // self.clean_system(); 
-        // self.save_data();
+        sleep();
+        match self.save_file() {
+            Ok(msg) => println!("{}", msg), 
+            Err(_) => {
+                println!("It could not save the file!");
+                return Err(());
+            }
+        }
+        sleep();
+
         Ok(())
     }
 
-    fn load_data(&mut self) -> Result<String, String> {
+    fn load_file(&mut self) -> Result<String, String> {
         if !self.input_path.exists() {
             return Err(format!("There is no file in this path!")); 
         }
@@ -74,9 +92,22 @@ impl Cleaner {
         Ok(format!("File stored and prepared to be used!"))
     }
 
-    fn save_data(&self) -> Result<bool, String> {
-        // Save the changes on another clean computer_games_clean.csv
-        todo!()
+    fn save_file(&self) -> Result<String, String> {
+        if self.output_path.exists() {
+            return Err("The file already exists!".to_string());
+        }
+
+        let text_to_save = self.content.join("\n");
+
+        if let Err(e) = fs::write(&self.output_path, text_to_save) {
+            return Err(format!("Error saving the file: {}", e));
+        }
+
+        Ok(format!(
+            "File {} has been cleaned and it is saved as {}", 
+            show_path(&self.input_path), 
+            show_path(&self.output_path)
+        ))
     }
 
     // Secondary functions
@@ -99,7 +130,8 @@ impl Cleaner {
     }
 
     pub fn clean_system(&mut self) -> Result<String, ()> {
-        let mut modificados = 0;
+        let mut changed = 0;
+
         for line in self.content.iter_mut() {
             let mut fields = Vec::new();
             let mut current_field = String::new();
@@ -118,9 +150,13 @@ impl Cleaner {
             fields.push(current_field.trim().to_string()); 
 
             if fields.len() != 6 { continue; }
+            
             let raw_os = &fields[4];
+            
             let cleaned_systems = validate_system(raw_os);
+            
             let new_os_field = cleaned_systems.join(", ");
+            
             fields[4] = new_os_field;
 
             let new_line: Vec<String> = fields.iter()
@@ -133,10 +169,10 @@ impl Cleaner {
                 })
                 .collect();
             *line = new_line.join(",");
-            modificados += 1;
+            changed += 1;
         }
 
-        Ok(format!("Sistemas padronizados. {} linhas processadas.", modificados))
+        Ok(format!("Systems cleaned. {} processed lines.", changed))
     }
 
     fn clean_date(&mut self) -> Result<String, ()> {
