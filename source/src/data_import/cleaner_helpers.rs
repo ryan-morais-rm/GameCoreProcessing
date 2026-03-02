@@ -1,5 +1,5 @@
 use std::path::{PathBuf};
-use crate::common_traits::data::sleep;
+use crate::common_traits::helpers::sleep;
 
 // Cleaner game functions
 pub fn extract_game_name(line: &str) -> String {
