@@ -30,7 +30,28 @@ pub fn load_file(input_path: &PathBuf) -> Result<Vec<String>, String> {
 
     sleep();
     
-    println!("File has been loaded and prepared to be used!");
+    // println!("File has been loaded and prepared to be used!");
 
     Ok(content)
+}
+
+pub fn extract_column(line: &str) -> Vec<String> {
+    let mut fields = Vec::new();
+    let mut current_field = String::new();
+    let mut inside_quotes = false;
+
+    for c in line.chars() {
+        match c {
+            '"' => inside_quotes = !inside_quotes,
+            ',' if !inside_quotes => {
+                fields.push(current_field.trim().trim_matches('"').to_string());
+                current_field.clear();
+            }
+            _ => current_field.push(c),
+        }
+    }
+
+    fields.push(current_field.trim().trim_matches('"').to_string());
+
+    fields
 }
