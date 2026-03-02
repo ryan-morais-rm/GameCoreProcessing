@@ -3,8 +3,7 @@ use std::path::PathBuf;
 use crate::common_traits::data::sleep;
 
 use super::cleaner_helpers::{
-    check_dataset, extract_game_name, validate_system, field_clean_blank, show_path
-};
+    check_dataset, extract_game_name, validate_system, field_clean_blank, show_path };
 
 pub struct Cleaner {
     pub input_path: PathBuf,
@@ -25,26 +24,13 @@ impl Cleaner {
 
         sleep();
         println!("{}", self.load_file()?);
-        
-        sleep();
         println!("{}", self.blank()?);
-        
-        sleep();
         println!("{}", self.name()?);
-        
-        sleep();
         println!("{}", self.date()?);
-        
-        sleep();
         println!("{}", self.system()?);
-        
-        sleep();
         check_dataset(&self.content);
-        
-        sleep();
         println!("{}", self.save_file()?);
-        
-        sleep();
+
         Ok("Cleaning has been done!".to_string())
     }
 
@@ -58,6 +44,8 @@ impl Cleaner {
         
         let raw_text = fs::read_to_string(&self.input_path).map_err(|e| e.to_string())?;
         self.content = raw_text.lines().map(|s| s.to_string()).collect();
+
+        sleep();
         
         Ok("File accessed and prepared to be used!".to_string())
     }
@@ -72,10 +60,11 @@ impl Cleaner {
         fs::write(&self.output_path, text_to_save)
             .map_err(|e| format!("Error saving the file: {}", e))?;
 
+        sleep();
+        
         Ok(format!(
             "File {} has been cleaned and it is saved as {}",
-            show_path(&self.input_path),
-            show_path(&self.output_path)
+            show_path(&self.input_path), show_path(&self.output_path)
         ))
     }
 
@@ -93,7 +82,10 @@ impl Cleaner {
             fields.into_iter().all(|field| !field.trim_matches('"').trim().is_empty())
         });
 
+        sleep();
+
         let len_then = self.content.len();
+
         Ok(format!("Cleaning of blank lines has ended!: {} removed lines. Rest: {}", len_before - len_then, len_then))
     }
 
@@ -105,6 +97,9 @@ impl Cleaner {
         });
 
         let len_after = self.content.len();
+        
+        sleep();
+
         Ok(format!("Duplicated games: {} deleted games.", len_before - len_after))
     }
 
@@ -142,6 +137,8 @@ impl Cleaner {
             changed += 1;
         }
 
+        sleep();
+
         Ok(format!("Systems cleaned. {} processed lines.", changed))
     }
 
@@ -171,13 +168,13 @@ impl Cleaner {
             let year = if clean_str.len() >= 4 {
                 let last_4 = &clean_str[clean_str.len()-4..];
                 if last_4.chars().all(|c| c.is_numeric()) { last_4 } else { "0000" }
-            } else {
-                "0000"
-            };
+            } else { "0000" };
 
             *line = format!("{}{}", &line[..start_index], year);
             qtd_mods += 1;
         }
+
+        sleep();
 
         Ok(format!("Dates are cleaned. {} lines has been adjusted to format AAAA.", qtd_mods))
     }
