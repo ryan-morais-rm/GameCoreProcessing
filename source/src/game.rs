@@ -1,5 +1,5 @@
 use std::fmt;
-use super::common_traits::data::Metadata;
+use super::common_traits::helpers::Metadata;
 
 pub struct Game {
     name: String, 

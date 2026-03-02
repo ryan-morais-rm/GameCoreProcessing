@@ -1,7 +1,7 @@
-use std::path::PathBuf;
 use std::collections::HashMap;
+use std::path::PathBuf;
 use crate::game::Game;
-use crate::common_traits::data::sleep;
+use crate::common_traits::helpers::{extract_column, load_file, sleep};
 
 pub struct Manipulator {
     // Total quantity of games 
@@ -19,6 +19,36 @@ impl Manipulator {
             games_year: HashMap::new(),
             games: Vec::new(), 
         }
+    }
+    pub fn load_data(&mut self, file_path: &PathBuf) -> Result<(), String> {
+        let raw_lines = load_file(file_path)?;
+
+        for (i, line) in raw_lines.iter().enumerate() {
+            if i == 0 { continue; } 
+
+            let columns = extract_column(line); 
+
+            if columns.len() != 6 { continue; } 
+
+            let date_u16 = columns[5].parse::<u16>().unwrap_or(0);
+
+            let game = Game::new(
+                columns[0].clone(),
+                columns[1].clone(),
+                columns[2].clone(),
+                columns[3].clone(),
+                columns[4].clone(),
+                date_u16,
+            );
+
+            self.games.push(game);
+        }
+
+        self.total_games = self.games.len();
+        
+        sleep();
+        
+        Ok(())
     }
 
     pub fn count_games(&self) -> Result<u16, ()>{

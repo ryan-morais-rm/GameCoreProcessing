@@ -1,5 +1,5 @@
 use std::io;
-
+use std::path::PathBuf;
 use super::data_manipulation::manipulator::Manipulator;
 
 #[derive(Debug, PartialEq)] 
@@ -38,9 +38,11 @@ pub fn from_str(s: &String) -> Result<OptionMenu, String> {
 }
 
 pub fn select_options(option: &Result<OptionMenu, String>) -> Result<bool, String> {
-    let data_manipulator = Manipulator::new();
+    let mut data_manipulator = Manipulator::new();
 
-    // data_manipulator.load_file();
+    let file = PathBuf::from("../info/games_cleaned.csv");
+
+    data_manipulator.load_data(&file);
 
     match option {
         Ok(OptionMenu::Q) => { 
