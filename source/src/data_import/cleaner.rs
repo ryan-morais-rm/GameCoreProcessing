@@ -1,9 +1,11 @@
 use std::fs;
 use std::path::PathBuf;
-use crate::common_traits::data::sleep;
+    use crate::common_traits::data::{load_file, sleep};
 
 use super::cleaner_helpers::{
-    check_dataset, extract_game_name, validate_system, field_clean_blank, show_path };
+    check_dataset, extract_game_name, validate_system, 
+    field_clean_blank, show_path
+};
 
 pub struct Cleaner {
     pub input_path: PathBuf,
@@ -21,9 +23,7 @@ impl Cleaner {
     }
 
     pub fn clean(&mut self) -> Result<String, String> {
-
-        sleep();
-        println!("{}", self.load_file()?);
+        self.content = load_file(&self.input_path)?;
         println!("{}", self.blank()?);
         println!("{}", self.name()?);
         println!("{}", self.date()?);
@@ -32,22 +32,6 @@ impl Cleaner {
         println!("{}", self.save_file()?);
 
         Ok("Cleaning has been done!".to_string())
-    }
-
-    fn load_file(&mut self) -> Result<String, String> {
-        if !self.input_path.exists() {
-            return Err("There is no file in this path!".to_string());
-        }
-        if self.input_path.is_dir() {
-            return Err("It is a directory! not a File!".to_string());
-        }
-        
-        let raw_text = fs::read_to_string(&self.input_path).map_err(|e| e.to_string())?;
-        self.content = raw_text.lines().map(|s| s.to_string()).collect();
-
-        sleep();
-        
-        Ok("File accessed and prepared to be used!".to_string())
     }
 
     fn save_file(&self) -> Result<String, String> {
@@ -61,7 +45,7 @@ impl Cleaner {
             .map_err(|e| format!("Error saving the file: {}", e))?;
 
         sleep();
-        
+
         Ok(format!(
             "File {} has been cleaned and it is saved as {}",
             show_path(&self.input_path), show_path(&self.output_path)
