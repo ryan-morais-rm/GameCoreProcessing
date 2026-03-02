@@ -1,30 +1,28 @@
-/* 
 use std::collections::HashMap;
 use crate::game::Game;
 
 pub struct Manipulator {
     // Total quantity of games 
     pub total_games: usize,
-    pub total_systems: u16, 
+    pub systems_count: HashMap<String, u32>, 
     pub games_year: HashMap<u16, u32>,
-    // Vector with Game Structs
-    pub games: Vec<Game>
+    pub games: Vec<Game>,
 }
 
-pub impl Manipulator {
-    fn new(&self) -> Self {
+impl Manipulator {
+    fn new() -> Self {
         Self {
             total_games: 0, 
-            total_systems: 0, 
-            games_year: HashMap<u16, u32>,
+            total_systems: HashMap::new(), 
+            games_year: HashMap::new(),
             games: Vec::new(), 
         }
     }
 
-    fn load_data(&self) {
+    fn load_data(&mut self, file_path: &str) -> Result<(), ()>{
         // Load clean csv and update games vector with the Structs Game
     }
-    pub fn count_games(&self) {
+    pub fn count_games(&self) -> Result<u16, ()>{
         // Quantity of games loaded.
         todo!(); 
     }
@@ -36,9 +34,8 @@ pub impl Manipulator {
         // Games released from each year.
         todo!(); 
     }
-    pub fn find_game(&self) {
+    pub fn find_game(&self) -> Result<bool, ()>{
         // Search game
         todo!(); 
     }
 }
-*/
