@@ -1,8 +1,10 @@
 use std::io;
-use super::common_traits::data::{sleep};
+
+use super::data_manipulation::manipulator::Manipulator;
 
 #[derive(Debug, PartialEq)] 
 pub enum OptionMenu {
+    O,
     Q, 
     S, 
     L, 
@@ -11,7 +13,8 @@ pub enum OptionMenu {
 
 pub fn show_menu() {
     println!("=========== MENU ==========="); 
-    println!("(q) quantity of games"); 
+    println!("(o) quantity of systems"); 
+    println!("(q) quantity of games");
     println!("(s) search game"); 
     println!("(l) list games"); 
     println!("(e) exit");  
@@ -25,6 +28,7 @@ pub fn input_option() -> String {
 
 pub fn from_str(s: &String) -> Result<OptionMenu, String> {
     match s.to_uppercase().trim() {
+        "O" => Ok(OptionMenu::O),
         "Q" => Ok(OptionMenu::Q),
         "S" => Ok(OptionMenu::S),
         "L" => Ok(OptionMenu::L),
@@ -34,27 +38,31 @@ pub fn from_str(s: &String) -> Result<OptionMenu, String> {
 }
 
 pub fn select_options(option: &Result<OptionMenu, String>) -> Result<bool, String> {
+    let data_manipulator = Manipulator::new();
+
+    // data_manipulator.load_file();
+
     match option {
         Ok(OptionMenu::Q) => { 
-            println!("Processing quantity...");
-            sleep();
+            data_manipulator.count_games();
             Ok(false)
-        }
+        },
         Ok(OptionMenu::S) => {
-            println!("Searching for games...");
-            sleep();
+            data_manipulator.find_game();
             Ok(false)
-        }
+        },
         Ok(OptionMenu::L) => {
-            println!("Listing games...");
-            sleep();
+            data_manipulator.games_released_year();
             Ok(false)
-        }
+        },
+        Ok(OptionMenu::O) => {
+            data_manipulator.count_systems();
+            Ok(false)
+        },
         Ok(OptionMenu::E) => {
             println!("Leaving program...");
-            sleep();
             Ok(true)
-        }
+        },
         Err(msg) => {
             Err(format!("This option does not exist: {}", msg))
         }

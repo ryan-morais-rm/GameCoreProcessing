@@ -1,6 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
-    use crate::common_traits::data::{load_file, sleep};
+use crate::common_traits::data::{load_file, sleep};
 
 use super::cleaner_helpers::{
     check_dataset, extract_game_name, validate_system, 
