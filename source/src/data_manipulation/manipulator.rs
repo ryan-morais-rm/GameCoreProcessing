@@ -1,9 +1,8 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
-use std::vec;
 use crate::game::Game;
 use crate::common_traits::helpers::{extract_column, load_file, sleep};
-use super::manipulator_helpers::{format_counts, CountData};
+use super::manipulator_helpers::{format_counts, options, CountData};
 
 pub struct Manipulator {
     // Total quantity of games 
@@ -54,10 +53,10 @@ impl Manipulator {
         Ok(())
     }
 
-    pub fn count_games(&self) -> String {
+    pub fn count_games(&self) {
         println!("Counting games...\n");
         sleep(1);
-        format!("There are {} games!", &self.total_games)
+        println!("There are {} games!", &self.total_games);
     }
 
     pub fn count_systems(&self) {
@@ -111,14 +110,10 @@ impl Manipulator {
     }
 
     pub fn find_game(&self) /*-> Result<bool, ()>*/ {
-        println!("Searching for games...\n");
-        sleep(1);
-        println!("{}", self.games[0].name());
-        println!("{}", self.games[0].producer());
-        println!("{}", self.games[0].developer());
-        println!("{}", self.games[0].system());
-        println!("{}", self.games[0].date());
-        println!("{}", self.games[0].genre());
+        match options() {
+            Ok(msg) => println!("{}", msg),
+            Err(msg) => println!("{}", msg)
+        }
         sleep(5);
     }
 }
