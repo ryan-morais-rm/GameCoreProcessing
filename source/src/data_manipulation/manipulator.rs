@@ -20,6 +20,7 @@ impl Manipulator {
             games: Vec::new(), 
         }
     }
+
     pub fn load_data(&mut self, file_path: &PathBuf) -> Result<(), String> {
         let raw_lines = load_file(file_path)?;
 
@@ -46,30 +47,90 @@ impl Manipulator {
 
         self.total_games = self.games.len();
         
-        sleep();
+        sleep(1);
         
         Ok(())
     }
 
-    pub fn count_games(&self) -> Result<u16, ()>{
-        println!("Counting games...");
-        sleep();
-        todo!(); 
+    pub fn count_games(&self) -> String {
+        println!("Counting games...\n");
+        sleep(1);
+        format!("There are {} games!", &self.total_games)
     }
+
     pub fn count_systems(&self) {
-        // Operating system most used.
-        println!("Counting systems...");
-        todo!(); 
+        println!("Counting systems...\n");
+        sleep(1);
+
+        let mut counts: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+        
+        for game in &self.games {
+            let systems_list: Vec<&str> = game.system().split(',').collect();
+            
+            for sys in systems_list {
+                let clean_sys = sys.trim();
+                if !clean_sys.is_empty() {
+                    *counts.entry(clean_sys.to_string()).or_insert(0) += 1;
+                }
+            }
+        }
+
+        let mut count_vec: Vec<(String, u32)> = counts.into_iter().collect();
+        
+        count_vec.sort_by(|a, b| b.1.cmp(&a.1));
+        
+        let mut result = String::from("There are these systems:\n");
+        result.push_str("------------------\n");
+        
+        for (system_name, quantity) in count_vec {
+            result.push_str(&format!("{} - {}\n", system_name, quantity));
+        }
+        result.push_str("------------------\n");
+
+        println!("{}", result);
+        sleep(10);
     }
-    pub fn games_released_year(&self) {
-        // Games released from each year.
-        println!("Listing games per year...");
-        sleep();
-        todo!(); 
+
+    pub fn games_per_year(&self) {
+        println!("Counting games by release year...\n");
+        sleep(1);
+
+        let mut counts: std::collections::HashMap<u16, u32> = std::collections::HashMap::new();
+        
+        for game in &self.games {
+            let year = game.date();
+            *counts.entry(*year).or_insert(0) += 1;
+        }
+
+        let mut count_vec: Vec<(u16, u32)> = counts.into_iter().collect();
+
+        count_vec.sort_by(|a, b| b.1.cmp(&a.1));
+
+        let mut result = String::from("Games released per year:\n");
+        result.push_str("------------------\n");
+
+        for (year, quantity) in count_vec {
+            if year == 0 {
+                result.push_str(&format!("Unknown Year (0000) - {} games\n", quantity));
+            } else {
+                result.push_str(&format!("{} - {} games\n", year, quantity));
+            }
+        }
+        result.push_str("------------------\n");
+
+        println!("{}", result);
+        sleep(10);
     }
-    pub fn find_game(&self) -> Result<bool, ()>{
-        println!("Searching for games...");
-        sleep();
-        todo!(); 
+
+    pub fn find_game(&self) /*-> Result<bool, ()>*/ {
+        println!("Searching for games...\n");
+        sleep(1);
+        println!("{}", self.games[0].name());
+        println!("{}", self.games[0].producer());
+        println!("{}", self.games[0].developer());
+        println!("{}", self.games[0].system());
+        println!("{}", self.games[0].date());
+        println!("{}", self.games[0].genre());
+        sleep(5);
     }
 }

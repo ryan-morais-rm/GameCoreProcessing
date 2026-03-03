@@ -59,9 +59,7 @@ impl Cleaner {
             if line.trim().is_empty() { return false; }
             let fields = field_clean_blank(line);
             
-            if fields.len() != 6 {
-                return false; 
-            }
+            if fields.len() != 6 { return false; }
 
             fields.into_iter().all(|field| !field.trim_matches('"').trim().is_empty())
         });
@@ -111,6 +109,7 @@ impl Cleaner {
             
             let raw_os = &fields[4];
             let cleaned_systems = validate_system(raw_os);
+            
             fields[4] = cleaned_systems.join(", ");
 
             let new_line: Vec<String> = fields.iter()
@@ -149,12 +148,17 @@ impl Cleaner {
             if comma_count != 5 { continue; }
             
             let clean_str = line[start_index..].trim().trim_matches('"');
+
             let year = if clean_str.len() >= 4 {
+                
                 let last_4 = &clean_str[clean_str.len()-4..];
+                
                 if last_4.chars().all(|c| c.is_numeric()) { last_4 } else { "0000" }
+            
             } else { "0000" };
 
             *line = format!("{}{}", &line[..start_index], year);
+            
             qtd_mods += 1;
         }
 

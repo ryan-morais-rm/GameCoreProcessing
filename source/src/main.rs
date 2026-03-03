@@ -3,14 +3,13 @@ mod game;
 mod common_traits;
 mod data_import;
 mod data_manipulation;
-use crate::common_traits::helpers::{sleep, clear_screen};
 use crate::data_import::cleaner::{Cleaner};
+use crate::common_traits::helpers::{sleep, clear_screen};
 use crate::menu::{from_str, input_option, select_options, show_menu};
 
 fn main() {
     clean_data();
-    // Main program
-     
+
     loop {
         sleep(2);
         clear_screen();

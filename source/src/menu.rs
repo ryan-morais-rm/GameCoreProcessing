@@ -58,7 +58,7 @@ pub fn select_options(option: &Result<OptionMenu, String>) -> Result<bool, Strin
             Ok(false)
         },
         Ok(OptionMenu::L) => {
-            data_manipulator.games_released_year();
+            data_manipulator.games_per_year();
             Ok(false)
         },
         Ok(OptionMenu::E) => {

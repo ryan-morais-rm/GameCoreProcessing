@@ -34,8 +34,6 @@ pub fn load_file(input_path: &PathBuf) -> Result<Vec<String>, String> {
 
     sleep(1);
     
-    // println!("File has been loaded and prepared to be used!");
-
     Ok(content)
 }
 
