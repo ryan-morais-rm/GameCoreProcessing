@@ -44,7 +44,7 @@ impl Cleaner {
         fs::write(&self.output_path, text_to_save)
             .map_err(|e| format!("Error saving the file: {}", e))?;
 
-        sleep();
+        sleep(1);
 
         Ok(format!(
             "File {} has been cleaned and it is saved as {}",
@@ -66,7 +66,7 @@ impl Cleaner {
             fields.into_iter().all(|field| !field.trim_matches('"').trim().is_empty())
         });
 
-        sleep();
+        sleep(1);
 
         let len_then = self.content.len();
 
@@ -82,7 +82,7 @@ impl Cleaner {
 
         let len_after = self.content.len();
         
-        sleep();
+        sleep(1);
 
         Ok(format!("Duplicated games: {} deleted games.", len_before - len_after))
     }
@@ -121,7 +121,7 @@ impl Cleaner {
             changed += 1;
         }
 
-        sleep();
+        sleep(1);
 
         Ok(format!("Systems cleaned. {} processed lines.", changed))
     }
@@ -158,7 +158,7 @@ impl Cleaner {
             qtd_mods += 1;
         }
 
-        sleep();
+        sleep(1);
 
         Ok(format!("Dates are cleaned. {} lines has been adjusted to format AAAA.", qtd_mods))
     }

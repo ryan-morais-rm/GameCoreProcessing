@@ -86,7 +86,7 @@ pub fn check_dataset(content: &Vec<String>) {
     }
     println!("=========================================\n");
 
-    sleep();
+    sleep(1);
 }
 
 pub fn show_path(path: &PathBuf) -> String {
