@@ -13,17 +13,11 @@ pub enum OptionMenu {
 
 pub fn show_menu() {
     println!("=========== MENU ==========="); 
-    println!("(o) quantity of systems"); 
-    println!("(q) quantity of games");
-    println!("(s) search game"); 
-    println!("(l) list games"); 
-    println!("(e) exit");  
-}
-
-pub fn input() -> String {
-    let mut option = String::new(); 
-    io::stdin().read_line(&mut option).expect("Option was not received");
-    option
+    println!("(o) Quantity of systems"); 
+    println!("(q) Quantity of games");
+    println!("(s) Search game"); 
+    println!("(l) List games"); 
+    println!("(e) Exit");  
 }
 
 pub fn from_str(s: &String) -> Result<OptionMenu, String> {
@@ -50,7 +44,7 @@ pub fn select_options(option: &Result<OptionMenu, String>) -> Result<bool, Strin
             Ok(false)
         },
         Ok(OptionMenu::Q) => { 
-            println!("{}", data_manipulator.count_games());
+            data_manipulator.count_games();
             Ok(false)
         },
         Ok(OptionMenu::S) => {
