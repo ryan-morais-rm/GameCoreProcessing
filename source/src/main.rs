@@ -5,7 +5,7 @@ mod data_import;
 mod data_manipulation;
 use crate::data_import::cleaner::{Cleaner};
 use crate::common_traits::helpers::{sleep, clear_screen};
-use crate::menu::{from_str, input_option, select_options, show_menu};
+use crate::menu::{from_str, input, select_options, show_menu};
 
 fn main() {
     clean_data();
@@ -15,7 +15,7 @@ fn main() {
         clear_screen();
         show_menu();
 
-        let option = input_option();
+        let option = input();
 
         let menu_item =  from_str(&option);
 

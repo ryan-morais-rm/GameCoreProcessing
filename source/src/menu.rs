@@ -20,7 +20,7 @@ pub fn show_menu() {
     println!("(e) exit");  
 }
 
-pub fn input_option() -> String {
+pub fn input() -> String {
     let mut option = String::new(); 
     io::stdin().read_line(&mut option).expect("Option was not received");
     option
