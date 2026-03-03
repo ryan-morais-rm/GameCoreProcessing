@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
+use std::vec;
 use crate::game::Game;
 use crate::common_traits::helpers::{extract_column, load_file, sleep};
+use super::manipulator_helpers::{format_counts, CountData};
 
 pub struct Manipulator {
     // Total quantity of games 
@@ -75,19 +77,14 @@ impl Manipulator {
             }
         }
 
-        let mut count_vec: Vec<(String, u32)> = counts.into_iter().collect();
-        
-        count_vec.sort_by(|a, b| b.1.cmp(&a.1));
-        
-        let mut result = String::from("There are these systems:\n");
-        result.push_str("------------------\n");
-        
-        for (system_name, quantity) in count_vec {
-            result.push_str(&format!("{} - {}\n", system_name, quantity));
-        }
-        result.push_str("------------------\n");
+        let vec_systems = counts.into_iter().collect();
+
+        let count_data = CountData::StringData(vec_systems);
+
+        let result = format_counts(count_data);
 
         println!("{}", result);
+
         sleep(10);
     }
 
@@ -102,23 +99,14 @@ impl Manipulator {
             *counts.entry(*year).or_insert(0) += 1;
         }
 
-        let mut count_vec: Vec<(u16, u32)> = counts.into_iter().collect();
+        let vec_years = counts.into_iter().collect();
 
-        count_vec.sort_by(|a, b| b.1.cmp(&a.1));
+        let count_data = CountData::NumberData(vec_years);
 
-        let mut result = String::from("Games released per year:\n");
-        result.push_str("------------------\n");
-
-        for (year, quantity) in count_vec {
-            if year == 0 {
-                result.push_str(&format!("Unknown Year (0000) - {} games\n", quantity));
-            } else {
-                result.push_str(&format!("{} - {} games\n", year, quantity));
-            }
-        }
-        result.push_str("------------------\n");
+        let result = format_counts(count_data);
 
         println!("{}", result);
+
         sleep(10);
     }
 

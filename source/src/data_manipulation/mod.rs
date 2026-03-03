@@ -1,2 +1,2 @@
 pub mod manipulator;
-// mod manipulator_helpers;
+mod manipulator_helpers;
