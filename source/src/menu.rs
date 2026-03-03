@@ -45,8 +45,12 @@ pub fn select_options(option: &Result<OptionMenu, String>) -> Result<bool, Strin
     data_manipulator.load_data(&file);
 
     match option {
+        Ok(OptionMenu::O) => {
+            data_manipulator.count_systems();
+            Ok(false)
+        },
         Ok(OptionMenu::Q) => { 
-            data_manipulator.count_games();
+            println!("{}", data_manipulator.count_games());
             Ok(false)
         },
         Ok(OptionMenu::S) => {
@@ -55,10 +59,6 @@ pub fn select_options(option: &Result<OptionMenu, String>) -> Result<bool, Strin
         },
         Ok(OptionMenu::L) => {
             data_manipulator.games_released_year();
-            Ok(false)
-        },
-        Ok(OptionMenu::O) => {
-            data_manipulator.count_systems();
             Ok(false)
         },
         Ok(OptionMenu::E) => {

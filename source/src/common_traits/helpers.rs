@@ -1,3 +1,4 @@
+use std::process::Command;
 use std::path::PathBuf;
 use std::thread;
 use std::fs;
@@ -8,8 +9,11 @@ pub trait Metadata {
     fn specific(&self) -> String; 
 }
 
-pub fn sleep() {
-    let secs: u64 = 1;
+pub fn clear_screen() {
+    Command::new("clear").status().unwrap();
+}
+
+pub fn sleep(secs: u64) {
     thread::sleep(Duration::from_secs(secs));
 }
 
@@ -28,7 +32,7 @@ pub fn load_file(input_path: &PathBuf) -> Result<Vec<String>, String> {
     
     content = raw_text.lines().map(|s| s.to_string()).collect();
 
-    sleep();
+    sleep(1);
     
     // println!("File has been loaded and prepared to be used!");
 
