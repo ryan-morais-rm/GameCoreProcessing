@@ -1,4 +1,7 @@
+use crate::game::{Game};
 use crate::common_traits::helpers::{input, sleep};
+use super::searches::{search_name, search_producer, search_developer,
+                      search_system, search_genre, search_date};
 
 enum OptionMenu {
     N,
@@ -18,38 +21,48 @@ fn menu() {
     println!("(t) Date\n");
 }
 
-fn select(option: &OptionMenu) -> Result<String, ()>{
-    println!("Input your option: ");
+fn select(option: &OptionMenu, games: &Vec<Game>) -> Result<(), ()>{
+    println!("Input: ");
+
     match option {
         OptionMenu::N => {
             let name = input();
-            println!("Searching for games with name {} ...", &name);
-            return Ok(name)
+            println!("Searching for games with name: {} ", &name);
+            match search_name(name, games) {
+                Ok(msg) => println!("Games: {:?}", msg),
+                Err(msg) => println!("{}", msg)
+            };
+            return Ok(())
         },
         OptionMenu::P => {
             let producer = input();
-            println!("Searching for games with producers {}...", &producer); 
-            return Ok(producer)
+            println!("Searching for games with producer: {}", &producer); 
+            // search_producer(producer, game);
+            return Ok(())
         },
         OptionMenu::D => {
             let developer = input();
-            println!("Searching for games with developers {}...", &developer);
-            return Ok(developer)
+            println!("Searching for games with developer: {}", &developer);
+            // search_developer(developer, game);
+            return Ok(())
         },
         OptionMenu::G => {
             let genre = input();
-            println!("Searching for games with genres {}...", &genre);
-            return Ok(genre)
+            println!("Searching for games with genre: {}", &genre);
+            // search_genre(genre, game);
+            return Ok(())
         },
         OptionMenu::S => {
             let system = input();
-            println!("Searching for games with systems {}...", &system);
-            return Ok(system)
+            println!("Searching for games with system: {}", &system);
+            // search_system(system, game);
+            return Ok(())
         },
         OptionMenu::T => {
             let date = input();
-            println!("Searching for games with date {}...", &date);
-            return Ok(date)
+            println!("Searching for games with date: {}...", &date);
+            // search_date(date, game);
+            return Ok(())
         }
     }
 }
@@ -66,7 +79,7 @@ fn from_str(s: &String) -> Result<OptionMenu, String> {
     }
 }
 
-pub fn options() -> Result<String, String> {
+pub fn find(game: &Vec<Game>) -> Result<String, String> {
     println!("Which field do you want to search?\n");
     sleep(1);
     menu();
@@ -75,11 +88,10 @@ pub fn options() -> Result<String, String> {
     if let Ok(option_enum) = from_str(&option) {
         println!("\nOption received!");
 
-        match select(&option_enum) {
-            Ok(msg) => {
-                println!("Search finished successfully!");
+        match select(&option_enum, game) {
+            Ok(_) => {
                 sleep(1);
-                return Ok(msg)
+                return Ok(format!("Search finished successfully!"))
             },
             Err(_) => {
                 sleep(1);
@@ -120,7 +132,7 @@ pub fn format_counts(data: CountData) -> String {
             
             for (year, quantity) in count_vec {
                 if year == 0 {
-                    result.push_str(&format!("Year (0000) - {} games\n", quantity));
+                    result.push_str(&format!("0000 - {} games\n", quantity));
                 } else {
                     result.push_str(&format!("{} - {} games\n", year, quantity));
                 }

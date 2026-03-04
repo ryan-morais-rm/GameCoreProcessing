@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 use crate::game::Game;
-use crate::common_traits::helpers::{extract_column, load_file, sleep};
-use super::manipulator_helpers::{format_counts, options, CountData};
+use crate::common_traits::helpers::{extract_column, load_file, sleep, levenshtein};
+use super::manipulator_helpers::{format_counts, find, CountData};
 
 pub struct Manipulator {
     // Total quantity of games 
@@ -20,6 +20,10 @@ impl Manipulator {
             games_year: HashMap::new(),
             games: Vec::new(), 
         }
+    }
+
+    pub fn get_games(&self) -> &Vec<Game> {
+        return &self.games
     }
 
     pub fn load_data(&mut self, file_path: &PathBuf) -> Result<(), String> {
@@ -110,10 +114,10 @@ impl Manipulator {
     }
 
     pub fn find_game(&self) /*-> Result<bool, ()>*/ {
-        match options() {
+        match find(&self.games) {
             Ok(msg) => println!("{}", msg),
             Err(msg) => println!("{}", msg)
         }
-        sleep(5);
+        sleep(10);
     }
 }
