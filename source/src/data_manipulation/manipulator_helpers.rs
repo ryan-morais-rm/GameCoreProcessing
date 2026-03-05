@@ -28,41 +28,80 @@ fn select(option: &OptionMenu, games: &Vec<Game>) -> Result<(), ()>{
         OptionMenu::N => {
             let name = input();
             println!("Searching for games with name: {} ", &name);
+            
             match search_name(name, games) {
-                Ok(msg) => println!("Games: {:?}", msg),
+                Ok(msg) => {
+                    println!("Games: {:?}", msg);
+                    return Ok(())
+                },
                 Err(msg) => println!("{}", msg)
             };
-            return Ok(())
+            return Err(())
         },
         OptionMenu::P => {
             let producer = input();
             println!("Searching for games with producer: {}", &producer); 
-            // search_producer(producer, game);
-            return Ok(())
+            
+            match search_producer(producer, games) {
+                Ok(msg) => {
+                    println!("Games: {:?}", msg);
+                    return Ok(())
+                },
+                Err(msg) => println!("{}", msg)
+            };
+            return Err(())
         },
         OptionMenu::D => {
             let developer = input();
             println!("Searching for games with developer: {}", &developer);
-            // search_developer(developer, game);
-            return Ok(())
+
+            match search_developer(developer, games) {
+                Ok(msg) => {
+                    println!("Games: {:?}", msg);
+                    return Ok(())
+                },
+                Err(msg) => println!("{}", msg)
+            };
+            return Err(())
         },
         OptionMenu::G => {
             let genre = input();
             println!("Searching for games with genre: {}", &genre);
-            // search_genre(genre, game);
-            return Ok(())
+
+            match search_genre(genre, games) {
+                Ok(msg) => {
+                    println!("Games: {:?}", msg);
+                    return Ok(())
+                },
+                Err(msg) => println!("{}", msg)
+            };
+            return Err(())
         },
         OptionMenu::S => {
             let system = input();
             println!("Searching for games with system: {}", &system);
-            // search_system(system, game);
-            return Ok(())
+            
+            match search_system(system, games) {
+                Ok(msg) => {
+                    println!("Games: {:?}", msg);
+                    return Ok(())
+                },
+                Err(msg) => println!("{}", msg)
+            };
+            return Err(())
         },
         OptionMenu::T => {
             let date = input();
             println!("Searching for games with date: {}...", &date);
-            // search_date(date, game);
-            return Ok(())
+            
+            match search_date(date, games) {
+                Ok(msg) => {
+                    println!("Games: {:?}", msg);
+                    return Ok(())
+                },
+                Err(msg) => println!("{}", msg)
+            };
+            return Err(())
         }
     }
 }
@@ -91,7 +130,7 @@ pub fn find(game: &Vec<Game>) -> Result<String, String> {
         match select(&option_enum, game) {
             Ok(_) => {
                 sleep(1);
-                return Ok(format!("Search finished successfully!"))
+                return Ok(format!("Search finished!"))
             },
             Err(_) => {
                 sleep(1);
