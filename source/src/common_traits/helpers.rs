@@ -3,11 +3,6 @@ use std::path::PathBuf;
 use std::{thread, fs, io};
 use std::time::Duration;
 
-pub trait Metadata {
-    fn common(&self) -> String;
-    fn specific(&self) -> String; 
-}
-
 pub fn input() -> String {
     let mut option = String::new(); 
     io::stdin().read_line(&mut option).expect("Option was not received");

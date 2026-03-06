@@ -1,5 +1,4 @@
 use std::fmt;
-use super::common_traits::helpers::Metadata;
 
 pub struct Game {
     name: String, 
@@ -17,19 +16,6 @@ impl fmt::Display for Game {
             "Name: {}\nDeveloper: {}\nProducer: {}\nGenre: {}\nSystem: {}\nDate: {}", 
             self.name, self.developer, self.producer, self.genre, self.system, self.date
         )
-    }
-}
-
-impl Metadata for Game {
-    fn common(&self) -> String {
-        format!("name: {}, 
-                 date: {}", 
-        self.name, self.date)
-    }
-    fn specific(&self) -> String {
-        format!("producer: {}, 
-                 developer: {}", 
-        self.producer, self.developer)
     }
 }
 

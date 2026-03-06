@@ -16,7 +16,7 @@ pub fn show_menu() {
     println!("(q) Quantity of games");
     println!("(s) Search game"); 
     println!("(l) List games"); 
-    println!("(e) Exit");  
+    println!("(e) Exit\n");  
 }
 
 pub fn from_str(s: &String) -> Result<OptionMenu, String> {
