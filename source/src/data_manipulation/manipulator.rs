@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::path::PathBuf;
 use crate::game::Game;
 use crate::common_traits::helpers::{extract_column, load_file, sleep};
@@ -7,8 +6,6 @@ use super::manipulator_helpers::{format_counts, find, CountData};
 pub struct Manipulator {
     // Total quantity of games 
     pub total_games: usize,
-    pub systems_count: HashMap<String, u32>, 
-    pub games_year: HashMap<u16, u32>,
     pub games: Vec<Game>,
 }
 
@@ -16,8 +13,6 @@ impl Manipulator {
     pub fn new() -> Self {
         Self {
             total_games: 0, 
-            systems_count: HashMap::new(), 
-            games_year: HashMap::new(),
             games: Vec::new(), 
         }
     }
